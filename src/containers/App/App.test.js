@@ -37,7 +37,11 @@ describe("App:", () => {
     ];
 
     getOrders.mockResolvedValue({ orders: masterOrderData });
-    postOrder.mockResolvedValue();
+    postOrder.mockResolvedValue({
+      id: 42,
+      name: "StarCraftDevTeam",
+      ingredients: ["beans", "jalapenos"],
+    });
    
     store = createStore(rootReducer);
     testWrapper = (
