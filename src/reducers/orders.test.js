@@ -36,6 +36,17 @@ describe("Reducer Tests", () => {
 
     expect(result).toEqual(mockExpectedState)
   })
+  it("Should set the correct state using the REMOVE_ORDER action", () => {
+    let mockOrderAction = {
+      type:"REMOVE_ORDER",
+      orderID:2
+    }
+    let mockExpectedState = [{ id: 1, name: "Jill", ingredients: [] }];
+
+    let result = orders(mockOrders,mockOrderAction)
+
+    expect(result).toEqual(mockExpectedState)
+  })
 
 })
 
