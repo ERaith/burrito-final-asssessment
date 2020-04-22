@@ -1,4 +1,4 @@
-import {setOrders,addOrder} from './index';
+import {setOrders,addOrder,removeOrder} from './index';
 
 describe('Action Tests', () => {
   it('SET_ORDERS:', () => {
@@ -23,6 +23,19 @@ describe('Action Tests', () => {
     }
     //execution
     let result = addOrder(mockOrder)
+
+    //assertion
+    expect(result).toEqual(expected)
+  });
+
+  it('REMOVE_ORDER:', () => {
+    //setup
+    let expected = {
+      type: 'REMOVE_ORDER',
+      orderID: 1
+    }
+    //execution
+    let result = removeOrder(1)
 
     //assertion
     expect(result).toEqual(expected)

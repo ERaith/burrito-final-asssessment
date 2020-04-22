@@ -16,6 +16,19 @@ export const postOrder = (order) => {
     }
   }).then((response) => {
     if(response.ok){
+      response=response.json()
+      return response
+    } else {
+      return response
+    }
+  })
+}
+
+export const deleteOrder = (orderID) => {
+  return fetch(BASE_URL+`/${orderID}`,{
+    method:"DELETE",
+  }).then((response) => {
+    if(response.ok){      
       return response
     } else {
       return response.statusText

@@ -39,8 +39,11 @@ class OrderForm extends Component {
   };
 
   placeOrder = async (order) => {
+    console.log(order);
+    
     let response = await postOrder(order);
-    this.props.addOrder(order);
+    console.log(response);
+    this.props.addOrder(response);
   }
 
   clearInputs = () => {
