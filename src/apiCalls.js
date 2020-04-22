@@ -18,7 +18,7 @@ export const postOrder = (order) => {
     if(response.ok){
       return response
     } else {
-      return response.statusText
+      return response
     }
   })
 }
