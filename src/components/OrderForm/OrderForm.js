@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {getOrders} from '../../apiCalls';
+import { setOrders } from '../../actions';
+import { connect } from 'react-redux';
 
 class OrderForm extends Component {
   constructor(props) {
@@ -8,6 +11,12 @@ class OrderForm extends Component {
       name: '',
       ingredients: []
     };
+  }
+
+  componentDidMount = () => {
+    getOrders()
+    .then(data => this.props.setOrders(data.orders))
+    .catch(err => console.error('Error fetching:', err));
   }
 
   handleNameChange = e => {
@@ -21,12 +30,16 @@ class OrderForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.clearInputs();
+    if(this.state.ingredients.length>0){
+      this.clearInputs();
+    }
   }
 
   clearInputs = () => {
     this.setState({name: '', ingredients: []});
   }
+
+
 
   render() {
     const possibleIngredients = ['beans', 'steak', 'carnitas', 'sofritas', 'lettuce', 'queso fresco', 'pico de gallo', 'hot sauce', 'guacamole', 'jalapenos', 'cilantro', 'sour cream'];
@@ -60,4 +73,9 @@ class OrderForm extends Component {
   }
 }
 
-export default OrderForm;
+
+const mapDispatchToProps = dispatch => ({
+  setOrders:(orders) => dispatch(setOrders(orders))
+})
+
+export default connect(undefined,mapDispatchToProps)(OrderForm)
