@@ -22,3 +22,15 @@ export const postOrder = (order) => {
     }
   })
 }
+
+export const deleteOrder = (orderID) => {
+  return fetch(BASE_URL+`/${orderID}`,{
+    method:"DELETE",
+  }).then((response) => {
+    if(response.ok){
+      return response
+    } else {
+      return response.statusText
+    }
+  })
+}
