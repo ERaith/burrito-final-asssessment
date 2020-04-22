@@ -38,11 +38,8 @@ class OrderForm extends Component {
     }
   };
 
-  placeOrder = async (order) => {
-    console.log(order);
-    
+  placeOrder = async (order) => {    
     let response = await postOrder(order);
-    console.log(response);
     this.props.addOrder(response);
   }
 
