@@ -1,24 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
-import { connect } from 'react-redux';
-import { setOrders } from '../../actions';
-import { getOrders } from '../../apiCalls';
+
 import Orders from '../../components/Orders/Orders';
 import OrderForm from '../../components/OrderForm/OrderForm';
 
-class App extends Component {
-  constructor(props) {
-    super();
-    this.props = props;
-  }
+const App = () => {
 
-  componentDidMount() {
-    getOrders()
-      .then(data => this.props.setOrders(data.orders))
-      .catch(err => console.error('Error fetching:', err));
-  }
 
-  render() {
     return (
       <main className="App">
         <header>
@@ -26,20 +14,13 @@ class App extends Component {
           <OrderForm />
         </header>
 
-        <Orders orders={this.props.orders}/>
+        <Orders/>
       </main>
     );
-  }
+  
 }
 
-const mapStateToProps = ({ orders }) => ({
-  orders
-});
+export default App;
 
-const mapDispatchToProps = dispatch => (
-  {
-    setOrders: (orders) => dispatch(setOrders(orders))
-  }
-);
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+

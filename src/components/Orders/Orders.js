@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './Orders.css';
 
 const Orders = props => {
@@ -22,4 +23,9 @@ const Orders = props => {
   )
 }
 
-export default Orders;
+const mapStateToProps = ({ orders }) => ({
+  orders
+});
+
+
+export default connect(mapStateToProps, undefined)(Orders);
