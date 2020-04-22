@@ -1,18 +1,17 @@
-
-import App from "./App";
+import OrderForm from "./OrderForm";
 import React from "react";
-import { fireEvent, render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { getOrders, postOrder } from "../../apiCalls";
+import { fireEvent, render } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import rootReducer from "../../reducers";
+import { getOrders, postOrder } from "../../apiCalls";
 jest.mock("../../apiCalls");
 
-describe("App:", () => {
-  let store, testWrapper;
+describe("OrderForm:", () => {
+  let store, testWrapper, masterOrderData;
   beforeEach(() => {
-    let masterOrderData = [
+    masterOrderData = [
       {
         id: 1,
         name: "Charlie",
@@ -35,34 +34,35 @@ describe("App:", () => {
         ingredients: ["jalapeno"],
       },
     ];
-
     getOrders.mockResolvedValue({ orders: masterOrderData });
     postOrder.mockResolvedValue();
     store = createStore(rootReducer);
     testWrapper = (
       <Provider store={store}>
-        <App />
+        <OrderForm />
       </Provider>
     );
   });
-  it("should render the initial app", async () => {
-    const { getByPlaceholderText, getByText, debug } = render(testWrapper);
-    let charlie,blarg,fantasma;
-    await waitFor(() => (charlie = getByText("Charlie")));
-    await waitFor(() => (blarg = getByText("Blarg")));
-    await waitFor(() => (fantasma = getByText("Fantasma")));
-    expect(charlie).toBeInTheDocument();
-    expect(blarg).toBeInTheDocument();
-    expect(fantasma).toBeInTheDocument();
-  });
 
-  it("should create an order and render", async () => {
+  it("Should render the order form", () => {
     const { getByPlaceholderText, getByText, debug } = render(testWrapper);
     let nameInput = getByPlaceholderText("Name");
     let submit = getByText("Submit Order");
     let beans = getByText("beans");
     let jalapeno = getByText("jalapenos");
+    expect(nameInput).toBeInTheDocument();
+    expect(submit).toBeInTheDocument();
+    expect(beans).toBeInTheDocument();
+    expect(jalapeno).toBeInTheDocument();
+  });
+
+  it("Should create a new order", () => {
+    const { getByPlaceholderText, getByText, debug } = render(testWrapper);
     jest.spyOn(global.Date, "now").mockImplementation(() => 42);
+    let nameInput = getByPlaceholderText("Name");
+    let submit = getByText("Submit Order");
+    let beans = getByText("beans");
+    let jalapeno = getByText("jalapenos");
     expect(getByText("Order: Nothing selected")).toBeInTheDocument();
     expect(jalapeno).toBeInTheDocument();
     fireEvent.click(beans);
@@ -77,9 +77,18 @@ describe("App:", () => {
       ingredients: ["beans", "jalapenos"],
     });
     expect(getByText("Order: Nothing selected")).toBeInTheDocument();
-    let scDevs;
-    await waitFor(() => (scDevs = getByText("StarCraftDevTeam")));
-    expect(scDevs).toBeInTheDocument()
   });
-
+  it("Should not create a new order with an empty ingredients list", () => {
+    jest.clearAllMocks();
+    const { getByPlaceholderText, getByText, debug } = render(testWrapper);
+    jest.spyOn(global.Date, "now").mockImplementation(() => 42);
+    let nameInput = getByPlaceholderText("Name");
+    let submit = getByText("Submit Order");
+    expect(getByText("Order: Nothing selected")).toBeInTheDocument();
+    fireEvent.change(nameInput, { target: { value: "StarCraftDevTeam" } });
+    expect(nameInput.value).toEqual("StarCraftDevTeam");
+    fireEvent.click(submit);
+    expect(postOrder).toBeCalledTimes(0);
+    expect(getByText("Order: Nothing selected")).toBeInTheDocument();
+  });
 });
