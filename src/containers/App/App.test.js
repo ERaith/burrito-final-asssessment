@@ -1,9 +1,9 @@
 
 import App from "./App";
 import React from "react";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor, getByLabelText } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { getOrders, postOrder } from "../../apiCalls";
+import { getOrders, postOrder,deleteOrder } from "../../apiCalls";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import rootReducer from "../../reducers";
@@ -38,6 +38,7 @@ describe("App:", () => {
 
     getOrders.mockResolvedValue({ orders: masterOrderData });
     postOrder.mockResolvedValue();
+   
     store = createStore(rootReducer);
     testWrapper = (
       <Provider store={store}>
@@ -54,6 +55,18 @@ describe("App:", () => {
     expect(charlie).toBeInTheDocument();
     expect(blarg).toBeInTheDocument();
     expect(fantasma).toBeInTheDocument();
+  });
+  it("should be able to delete orders", async () => {
+    const { getByLabelText, getByText, debug } = render(testWrapper);
+    let charlie
+    await waitFor(() => (charlie = getByText("Charlie")));
+    let deleteCharlieOrder = getByLabelText('Delete Charlie');
+    expect(charlie).toBeInTheDocument();
+    deleteOrder.mockResolvedValue();
+    expect(charlie).toBeInTheDocument();
+    fireEvent.click(deleteCharlieOrder);
+    expect(deleteOrder).toBeCalledWith(1)
+    await waitFor(()=>expect(charlie).not.toBeInTheDocument())
   });
 
   it("should create an order and render", async () => {

@@ -22,7 +22,7 @@ const Orders = props => {
             return <li key ={order.name + {ingredient} + Math.random()}>{ingredient}</li>
           })}
         </ul>
-        <button onClick = {()=>handleDelete(order.id)}>Delete Order</button>
+        <button aria-label ={`Delete ${order.name}`}onClick = {()=>handleDelete(order.id)}>Delete Order</button>
       </div>
     )
   });
